@@ -3,7 +3,7 @@ import json
 
 from util import filter_dict
 
-def get_waittime(iata_airport: str) -> dict:
+def get_wait_time(iata_airport: str) -> dict:
     api_key = '8e2cff00ff9c6b3f448294736de5908a'
     headers = {'X-apiKey': api_key,
                'Accept': 'application/json'}
