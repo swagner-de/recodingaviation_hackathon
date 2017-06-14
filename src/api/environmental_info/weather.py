@@ -1,0 +1,65 @@
+""" This module retrieves weather information for a airport"""
+from pprint import pprint
+from .. import util
+import json
+import requests
+
+API_KEY = "89e15931434731aefdaa04920ec60e44"
+
+def get_airport_weather_current(iata, scale="C"):
+    """
+    Get current weather information for an airport
+    Keyword arguments:
+    iata -- airport iata code
+    scale -- temparature scale (C or F)
+    """
+    url = "https://weather-qa.api.aero/weather/v1/current/{}"
+    url = url.format(iata)
+    headers = {"X-apiKey": API_KEY, "Accept":"application/json"}
+    params = {"temperatureScale":scale}
+    resp = requests.get(url, headers=headers, params=params)
+    resp = json.loads(resp.text)
+    return resp['currentWeather']
+
+def get_airport_weather_forecast(iata, duration="7", scale="C"):
+    """
+    Get weather forecast information for an airport
+
+    Keyword arguments:
+    iata -- airport iata code
+    duration -- period of days to be returned
+    scale -- temparature scale (C or F)
+    """
+    url = "https://weather-qa.api.aero/weather/v1/forecast/{}"
+    url = url.format(iata)
+    headers = {"X-apiKey": API_KEY, "Accept":"application/json"}
+    params = {"temperatureScale":scale, "duration":duration}
+    resp = requests.get(url, headers=headers, params=params)
+    resp = json.loads(resp.text)
+    return resp['weatherForecast']
+
+def get_airport_weather_combined(iata, duration="7", scale="C"):
+    """
+    Get combination of current weather information and forecast for an airport
+
+    Keyword arguments:
+    iata -- airport iata code
+    duration -- period of days to be returned
+    scale -- temparature scale (C or F)
+    """
+    url = "https://weather-qa.api.aero/weather/v1/combined/{}"
+    url = url.format(iata)
+    headers = {"X-apiKey": API_KEY, "Accept":"application/json"}
+    params = {"temperatureScale":scale, "duration":duration}
+    resp = requests.get(url, headers=headers, params=params)
+    resp = json.loads(resp.text)
+    filter = {"currentWeather", "weatherForecast"}
+    resp = util.filter_dict(resp, filter)
+    pprint(resp)
+    # return resp['weatherForecast']
+
+
+if __name__ == "__main__":
+    # get_airport_weather_current("HAM")
+    # get_airport_weather_forecast("HAM", 7)
+    get_airport_weather_combined("HAM", 7)
