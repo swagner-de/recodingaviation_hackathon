@@ -1,6 +1,7 @@
 """Module that handles api calls to get information about flights"""
 from pprint import pprint
-import requests as requests
+import requests
+import json
 
 API_KEY = "2cfd0827f82ceaccae7882938b4b1627"
 
@@ -19,7 +20,8 @@ def get_flights(airport, adi, airline="", future_window=0):
     payload = {"futureWindow": future_window}
     headers = {"X-apiKey": API_KEY, "Accept":"application/json"}
     resp = requests.get(url, headers=headers, params=payload)
-    return resp
+    resp = json.loads(resp.text)
+    return resp['flightRecord']
 
 def get_flight(airport, airline, flightno, adi, operation_date=""):
     """ Requests information for a specific flight.
@@ -38,9 +40,11 @@ def get_flight(airport, airline, flightno, adi, operation_date=""):
         payload = {"operationDate": operation_date}
         resp = requests.get(url, headers=headers, params=payload)
     else:
-        resp = requests.get(url, headers=headers, params=payload)
-    return resp
+        resp = requests.get(url, headers=headers)
+    pprint(resp)
+    resp = json.loads(resp.text)
+    return resp['flightRecord']
 
 if __name__ == "__main__":
-    # get_flights("MIA", "d")
-    get_flight("FRA","LH", "012", "d"
+    get_flights("MIA", "d")
+    # get_flight("FRA","LH", "012", "d")
