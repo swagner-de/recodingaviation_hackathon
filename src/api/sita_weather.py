@@ -1,10 +1,8 @@
 """ This module retrieves weather information for a airport"""
 import json
-from pprint import pprint
-
 import requests
-
-from api import util
+from util import filter_dict
+from pprint import pprint
 
 API_KEY = "89e15931434731aefdaa04920ec60e44"
 
@@ -55,10 +53,9 @@ def get_airport_weather_combined(iata, duration="7", scale="C"):
     params = {"temperatureScale":scale, "duration":duration}
     resp = requests.get(url, headers=headers, params=params)
     resp = json.loads(resp.text)
-    filter = {"currentWeather", "weatherForecast"}
-    resp = util.filter_dict(resp, filter)
-    pprint(resp)
-    # return resp['weatherForecast']
+    filter_set = {"currentWeather", "weatherForecast"}
+    resp = filter_dict(resp, filter_set)
+    return resp['weatherForecast']
 
 
 if __name__ == "__main__":
