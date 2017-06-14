@@ -1,8 +1,10 @@
 """ This module retrieves weather information for a airport"""
-from pprint import pprint
-from .. import util
 import json
+from pprint import pprint
+
 import requests
+
+from api import util
 
 API_KEY = "89e15931434731aefdaa04920ec60e44"
 

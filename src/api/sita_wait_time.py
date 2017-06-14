@@ -1,7 +1,8 @@
-import requests
 import json
+import requests
 
 from util import filter_dict
+
 
 def get_wait_time(iata_airport: str) -> dict:
     api_key = '8e2cff00ff9c6b3f448294736de5908a'
