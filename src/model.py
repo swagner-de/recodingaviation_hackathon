@@ -20,3 +20,14 @@ class User(db.Document):
         except DoesNotExist:
             return False
 
+class Leg(db.EmbeddedDocument):
+    departure_airport = db.StringField(max_length=3)
+    arrival_airport = db.StringField(max_length=3)
+    carrier = db.StringField(max_length=2)
+    flight_no = db.StringField(max_length=4)
+    departure_date = db.DateTimeField()
+
+
+class Trip(db.Document):
+    user = db.ReferenceField(User)
+    legs = db.ListField(db.EmbeddedDocumentField(Leg))
