@@ -102,3 +102,5 @@ ENV/
 
 .idea/
 *.gif
+*.cfg
+*test.py

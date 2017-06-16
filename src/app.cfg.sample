@@ -1,0 +1,5 @@
+app.config['MONGODB_SETTINGS'] = {
+    'db': 'some_db',
+    'host': '192.168.1.35',
+    'port': 12345
+}

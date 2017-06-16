@@ -1,3 +1,5 @@
 flask
 requests
 json
+flask-mongoengine
+flask-login
