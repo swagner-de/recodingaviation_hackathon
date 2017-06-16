@@ -2,4 +2,4 @@ flask
 requests
 json
 flask-mongoengine
-flask-login
+flask-httpauth
