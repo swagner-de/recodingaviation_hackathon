@@ -37,8 +37,9 @@ def create_trip_from_pnr():
 @auth.login_required
 def get_current_legs():
     u = User.objects.get(email=auth.username())
-    from trip_handler import get_current_legs
-    return jsonify(get_current_legs(user=u))
+    from trip_handler import get_current_connect_info
+    return jsonify(get_current_connect_info(user=u))
+
 
 
 if __name__ == "__main__":

@@ -43,8 +43,11 @@ class Leg(db.EmbeddedDocument):
             for l in t.legs:
                 if l.departure_date <= high_border and l.departure_date >= low_border:
                     res.append(l)
-        return sorted(res, key=lambda x: x.departure_date, reverse=True)
+        return sorted(res, key=lambda x: x.departure_date, reverse=False)
 
+    def get_delay(self):
+        from api import ams_oper_flight_status
+        return ams_oper_flight_status.get_oper_flight_status(self.carrier+self.flight_no)
 
 
 class Trip(db.Document):
