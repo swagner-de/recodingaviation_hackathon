@@ -64,7 +64,6 @@ def __get_directions_from_geo(geo_arr:str, geo_dep:str) -> dict:
     directions = resp_bdy.get('directions', [{}])[0].get('features', [])
     resp_bdy = None
 
-
     return {
         'total_ped_time': get_pedestrian_time(routes),
         'filters_on_route': get_filters_on_route(directions)

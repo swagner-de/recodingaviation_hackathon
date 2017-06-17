@@ -20,9 +20,9 @@ def get_flight_oper_info(connection):
     return connection
 
 def get_transfer_info(connection):
-    from ams_wayfinding import get_directions_from_gates
+    from api.ams_wayfinding import get_directions_from_gates
     connection['transfer'] = get_directions_from_gates(arr_gate=connection['inbound'].gate, dep_gate=connection['outbound'].gate)
-    from ams_wait_time import get_waittime_for_filters
+    from api.ams_wait_time import get_waittime_for_filters
     wait_time = get_waittime_for_filters(connection['transfer']['filters_on_route'])
     transfer = connection['transfer']
     transfer['min_waiting_time'] = wait_time['min_waiting']
