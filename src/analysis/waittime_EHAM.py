@@ -66,15 +66,15 @@ class WaitimeEHAS:
         dt = datetime.fromtimestamp(
             int(ts)
         )
-        rounded_dt =  datetime(dt.year, dt.month, dt.day, dt.hour,15*(dt.minute // 15))
+        rounded_dt =  datetime(dt.year, dt.month, dt.day, dt.hour, 15*(dt.minute // 15))
         # rounded_ts = rounded_dt.astype(np.int64) // 10 ** 9
         rounded_ts = rounded_dt.timestamp()
         return self._dict[rounded_ts]
 
 
-    def _load_pickle(self, pkl):
+    def _load_pickle(self, pkl_file):
         """ Loads the dictionary from file"""
-        return pkl.load(open(pkl, "rb"))
+        return pkl.load(open(pkl_file, "rb"))
 
 if __name__ == "__main__":
     eh = "../../data/EF.csv"
