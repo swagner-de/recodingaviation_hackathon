@@ -1,12 +1,14 @@
 from flask_mongoengine import MongoEngine, DoesNotExist
 from werkzeug.security import check_password_hash, generate_password_hash
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 db = MongoEngine()
 
 class User(db.Document):
     email = db.StringField(max_length=120)
+    last_name = db.StringField(max_length=120)
+    first_name = db.StringField(max_length=120)
     password = db.StringField(max_length=120)
 
     def clean(self):
@@ -38,8 +40,8 @@ class Leg(db.EmbeddedDocument):
 
     @staticmethod
     def get_current_legs(user):
-        low_border = datetime.strptime('2017-06-16', '%Y-%m-%d')
-        high_border = datetime.strptime('2017-06-30', '%Y-%m-%d')
+        high_border = datetime.now() + timedelta(hours=36)
+        low_border = datetime.now() - timedelta(hours=36)
         ts = Trip.objects(user=user)
         res = []
         for t in ts:
@@ -61,7 +63,7 @@ class Leg(db.EmbeddedDocument):
             self.delay = 0
         try:
             self.gate = oper_info['gate']['current']
-        except KeyError:
+        except TypeError:
             self.gate = None
         try:
             self.departure_date = dateutil.parser.parse(oper_info['scheduledOffBlockTime'])
@@ -75,6 +77,6 @@ class Trip(db.Document):
 
     @staticmethod
     def get_current_trips(user):
-        low_border = datetime.strptime('2017-06-16', '%Y-%m-%d')
-        high_border = datetime.strptime('2017-06-30', '%Y-%m-%d')
+        high_border = datetime.now() + timedelta(hours=36)
+        low_border = datetime.now() - timedelta(hours=36)
         return [t.legs.filter(departure_date__lte=high_border, departure_date__gte=low_border) for t in Trip.objects(user=user)]
