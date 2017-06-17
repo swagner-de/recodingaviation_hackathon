@@ -30,4 +30,5 @@ class Leg(db.EmbeddedDocument):
 
 class Trip(db.Document):
     user = db.ReferenceField(User)
+    pnr = db.StringField(max_length=6)
     legs = db.ListField(db.EmbeddedDocumentField(Leg))
