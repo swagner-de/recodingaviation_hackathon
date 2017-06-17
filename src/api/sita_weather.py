@@ -19,7 +19,7 @@ def get_airport_weather_current(iata, scale="C"):
     params = {"temperatureScale":scale}
     resp = requests.get(url, headers=headers, params=params)
     resp = json.loads(resp.text)
-    return resp['currentWeather']
+    return resp.get('currentWeather', None)
 
 def get_airport_weather_forecast(iata, duration="7", scale="C"):
     """
@@ -36,7 +36,7 @@ def get_airport_weather_forecast(iata, duration="7", scale="C"):
     params = {"temperatureScale":scale, "duration":duration}
     resp = requests.get(url, headers=headers, params=params)
     resp = json.loads(resp.text)
-    return resp['weatherForecast']
+    return resp('weatherForecast', None)
 
 def get_airport_weather_combined(iata, duration="7", scale="C"):
     """
@@ -55,7 +55,7 @@ def get_airport_weather_combined(iata, duration="7", scale="C"):
     resp = json.loads(resp.text)
     filter_set = {"currentWeather", "weatherForecast"}
     resp = filter_dict(resp, filter_set)
-    return resp['weatherForecast']
+    return resp('weatherForecast', None)
 
 
 if __name__ == "__main__":
