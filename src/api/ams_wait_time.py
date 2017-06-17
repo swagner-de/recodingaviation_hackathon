@@ -32,8 +32,9 @@ def get_waittime_for_filter(filter_airport:str) -> dict:
             result[filter_airport] = filter_dict(meas,wanted)
     return result
 
-def get_waittime_for_filters(filter_airport:set) -> dict:
+def get_waittime_for_filters(filter_airport:list) -> dict:
     """Get the current waittime for a set of filters """
+    filter_airport = set(filter_airport)
     resp = requests.get(URL, headers=HEADERS)
     resp_json = json.loads(resp.text)['measurements']
     result = {}
