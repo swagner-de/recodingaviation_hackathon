@@ -56,3 +56,7 @@ def get_current_connect_info(user):
     calc_times(connection)
     return connection
 
+def get_bags_info(user):
+    from api.sita_bag_journey import get_bag_journey
+    return get_bag_journey('akter', 'nazma', 'ZZ', 'LHR', '0650', '2015-10-14')
+
