@@ -33,6 +33,13 @@ def create_trip_from_pnr():
     # Created
     return jsonify(t), 201
 
+@app.route('/current_legs', methods=['GET'])
+@auth.login_required
+def get_current_legs():
+    u = User.objects.get(email=auth.username())
+    from trip_handler import get_current_legs
+    return jsonify(get_current_legs(user=u))
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=4000)
