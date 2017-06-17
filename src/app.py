@@ -21,11 +21,16 @@ db.init_app(app)
 def create_trip_from_pnr():
     pnr = request.args.get('pnr')
     if not pnr:
+        # Bad Request
         return 400
     u = User.objects.get(email=auth.username())
     from map_booking_code import get_trip
     t = get_trip(pnr, u)
+    if not t:
+        # Not found
+        return 404
     t.save()
+    # Created
     return jsonify(t), 201
 
 

@@ -42,4 +42,6 @@ codes = {
 
 
 def get_trip(pnr, user):
-    return Trip(legs=codes.get(pnr, None), user=user, pnr=pnr)
+    legs = codes.get(pnr, None)
+    if legs:
+        return Trip(legs=legs, user=user, pnr=pnr)
