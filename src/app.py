@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from flask import Flask, request, jsonify
 from model import db, User
 from flask_httpauth import HTTPBasicAuth
