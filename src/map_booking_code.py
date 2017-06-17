@@ -22,14 +22,15 @@ leg_8 = Leg(departure_airport='AMS', arrival_airport='MAD',
                 carrier='KL', flight_no='1701', departure_date=datetime.strptime('2017-06-16', '%Y-%m-%d'))
 
 leg_9 = Leg(departure_airport='EDI', arrival_airport='AMS',
-                carrier='KL', flight_no='1276', departure_date=datetime.strptime('2017-06-26', '%Y-%m-%d'))
+                carrier='KL', flight_no='1276', departure_date=datetime.strptime('2017-06-17', '%Y-%m-%d'))
 leg_10 = Leg(departure_airport='AMS', arrival_airport='HAJ',
-                carrier='KL', flight_no='1903', departure_date=datetime.strptime('2017-06-26', '%Y-%m-%d'))
+                carrier='KL', flight_no='1903', departure_date=datetime.strptime('2017-06-17', '%Y-%m-%d'))
 
-leg_11 = Leg(departure_airport='SFO', arrival_airport='AMS',
-                carrier='KL', flight_no='606', departure_date=datetime.strptime('2017-06-16', '%Y-%m-%d'))
-leg_12 = Leg(departure_airport='AMS', arrival_airport='FRA',
-                carrier='KL', flight_no='1765', departure_date=datetime.strptime('2017-06-16', '%Y-%m-%d'))
+leg_11 = Leg(departure_airport='TXL', arrival_airport='AMS',
+                carrier='KL', flight_no='1822', departure_date=datetime.strptime('2017-06-18', '%Y-%m-%d'))
+
+leg_12 = Leg(departure_airport='AMS', arrival_airport='JFK',
+                carrier='KL', flight_no='641', departure_date=datetime.strptime('2017-06-18', '%Y-%m-%d'))
 
 codes = {
     'AAAAA1': [leg_1, leg_2],

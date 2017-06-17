@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from flask import Flask, request, jsonify
 from model import db, User
 from flask_httpauth import HTTPBasicAuth
@@ -40,6 +42,12 @@ def get_current_legs():
     from trip_handler import get_current_connect_info
     return jsonify(get_current_connect_info(user=u))
 
+@app.route('/bags', methods=['GET'])
+@auth.login_required
+def get_bag_journey():
+    u = User.objects.get(email=auth.username())
+    from trip_handler import get_bags_info
+    return jsonify(get_bags_info(user=u))
 
 
 if __name__ == "__main__":

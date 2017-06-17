@@ -1,6 +1,6 @@
 """ Retrieves Waittime Information from Schiphol Airport`"""
 from pprint import pprint
-from util import filter_dict
+from api.util import filter_dict
 import json
 import requests
 
