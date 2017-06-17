@@ -1,4 +1,4 @@
-import ams_wait_time
+import api.ams_wait_time
 import requests
 import json
 import re
@@ -32,7 +32,7 @@ def get_pedestrian_time(routes):
         return route.get('attributes', {}).get('Total_PedestrianTime', None)
 
 def get_filters_on_route(directions):
-    filters_set = ams_wait_time.get_unique_filters()
+    filters_set = api.ams_wait_time.get_unique_filters()
     filters = []
     for item in directions:
         events = item.get('events', [])
