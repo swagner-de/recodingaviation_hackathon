@@ -21,7 +21,7 @@ def get_flights(airport, adi, airline="", future_window=0):
     headers = {"X-apiKey": API_KEY, "Accept":"application/json"}
     resp = requests.get(url, headers=headers, params=payload)
     resp = json.loads(resp.text)
-    return resp['flightRecord']
+    return resp.get('flightRecord', None)
 
 def get_flight(airport, airline, flightno, adi, operation_date=""):
     """ Requests information for a specific flight.

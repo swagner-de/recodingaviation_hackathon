@@ -15,7 +15,7 @@ def get_airport_iata(iata):
     headers = {"X-apiKey": API_KEY, "Accept":"application/json"}
     resp = requests.get(url, headers=headers)
     resp = json.loads(resp.text)
-    return resp['airports']
+    return resp.get('airports', None)
 
 def get_airport_match(query):
     """
@@ -29,7 +29,7 @@ def get_airport_match(query):
     headers = {"X-apiKey": API_KEY, "Accept":"application/json"}
     resp = requests.get(url, headers=headers)
     resp = json.loads(resp.text)
-    return resp
+    return resp.get('airports', None)
 
 def get_airport_distance(iata_from, iata_to, units="km"):
     """
@@ -46,7 +46,7 @@ def get_airport_distance(iata_from, iata_to, units="km"):
     params = {"units":units}
     resp = requests.get(url, headers=headers, params=params)
     resp = json.loads(resp.text)
-    return resp['distance']
+    return resp.get('distance', None)
 
 def get_airport_nearest(latitude, longitude, max=5):
     """
@@ -63,10 +63,10 @@ def get_airport_nearest(latitude, longitude, max=5):
     params = {"maxAirports":max}
     resp = requests.get(url, headers=headers, params=params)
     resp = json.loads(resp.text)
-    return resp['airports']
+    return resp.get('airports', None)
 
 if __name__ == "__main__":
-    get_airport_iata("FRA")
-    # get_airport_match("frank")
+    # get_airport_iata("FRA")
+    get_airport_match("frank")
     # get_airport_distance("FRA", "HAM", "mile")
     # get_airport_nearest("52.297097", "4.879903", 1)
