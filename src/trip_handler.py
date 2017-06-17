@@ -17,9 +17,8 @@ def get_connection(leg, legs_remaining):
 
 def get_current_connect_info(user):
     current_legs = user.get_current_legs()
-    connections = []
-    for i in range(len(current_legs)):
-        c = get_connection(current_legs[i], current_legs[i:])
-        if c:
-           connections.append(c)
-    return connections
+    try:
+        connection = get_connection(current_legs[0], current_legs[1:])
+    except IndexError:
+        return None
+    return connection
