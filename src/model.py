@@ -54,9 +54,14 @@ class Leg(db.EmbeddedDocument):
         from api import ams_oper_flight_status
         import dateutil
         oper_info = ams_oper_flight_status.get_oper_flight_status(self.carrier+self.flight_no)
+        estimated_ = oper_info['estimatedInBlockTime']
+        scheduled_ = oper_info['scheduledInBlockTime']
+        if estimated_ == None and scheduled_ == None:
+            estimated_ = oper_info['estimatedOffBlockTime']
+            scheduled_ = oper_info['scheduledOffBlockTime']
         try:
-            estimated = dateutil.parser.parse(oper_info['estimatedInBlockTime'])
-            scheduled = dateutil.parser.parse(oper_info['scheduledInBlockTime'])
+            estimated = dateutil.parser.parse(estimated_)
+            scheduled = dateutil.parser.parse(scheduled_)
             self.arrival_date = scheduled
             self.delay = int((estimated - scheduled).total_seconds() / 60)
         except TypeError:

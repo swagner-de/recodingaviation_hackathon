@@ -49,12 +49,27 @@ def calc_times(connection):
     except KeyError:
         pass
 
+def get_que_recommendation(connection):
+    transfer = connection['transfer']
+    from analysis.waittime_EHAM import get_best_timeslot
+    spare_time_min = transfer.get('spare_time_min', False)
+    if spare_time_min:
+        later, improvement = get_best_timeslot(connection['inbound'].arrival_date, spare_time_min)
+    transfer['recommendation'] = {
+        'later' : later,
+        'improvement': str(improvement*100) * '\%' if not 1 else 'no queueing expected'
+    }
+
 def get_current_connect_info(user):
     current_legs = user.get_current_legs()
     connection = get_connection(current_legs)
     get_flight_oper_info(connection)
     get_transfer_info(connection)
     calc_times(connection)
+    try:
+        get_que_recommendation(connection)
+    except KeyError:
+        pass
     return connection
 
 def get_bags_info(user):

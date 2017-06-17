@@ -33,7 +33,7 @@ def get_pedestrian_time(routes):
 
 def get_filters_on_route(directions):
     filters_set = api.ams_wait_time.get_unique_filters()
-    filters = []
+    filters = set()
     for item in directions:
         events = item.get('events', [])
         for event in events:
@@ -44,10 +44,10 @@ def get_filters_on_route(directions):
                     try:
                         relevant = [k for k in filters_set if k in evt_string]
                         if relevant:
-                            filters.append(relevant[0])
+                            filters.add(relevant[0])
                     except AttributeError:
                         pass
-    return filters if len(filters) != 0 else None
+    return [f for f in filters] if len(filters) != 0 else None
 
 def __get_directions_from_geo(geo_arr:str, geo_dep:str) -> dict:
     uri = 'http://etest2.esri.nl:8080/arcgis/rest/services/Schiphol/SWF_NETWORK/NAServer/Route/solve?stops=' \
