@@ -43,8 +43,8 @@ def get_flight(airport, airline, flightno, adi, operation_date=""):
         resp = requests.get(url, headers=headers)
     pprint(resp)
     resp = json.loads(resp.text)
-    return resp['flightRecord']
+    return resp.get('flightRecord', None)
 
 if __name__ == "__main__":
-    get_flights("MIA", "d")
-    # get_flight("FRA","LH", "012", "d")
+    # get_flights("MIA", "d")
+    pprint(get_flight("AMS","KL", "606", "a"))
