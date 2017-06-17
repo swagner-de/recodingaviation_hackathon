@@ -32,8 +32,28 @@ def get_waittime_for_filter(filter_airport:str) -> dict:
             result[filter_airport] = filter_dict(meas,wanted)
     return result
 
+def get_waittime_for_filters(filter_airport:set) -> dict:
+    """Get the current waittime for a set of filters """
+    resp = requests.get(URL, headers=HEADERS)
+    resp_json = json.loads(resp.text)['measurements']
+    result = {}
+    max = 0
+    min = 0
+    # wanted = set(['updated', 'timeIntervalInMinutes'])
+    for meas in resp_json:
+        result_id = meas['resultId'].strip('_economy_prediction')
+        if result_id in filter_airport:
+            max_val = meas['timeIntervalInMinutes'].get('max',0)
+            min_val = meas['timeIntervalInMinutes'].get('min',0)
+            result[result_id] ={'max':max_val, 'min': min_val}
+            max += max_val
+            min += min_val
+    result['max_waiting'] = max
+    result['min_waiting'] = min
+    return result
+
 if __name__ == '__main__':
-    pprint(get_unique_filters())
-    # get_waittime_for_filter('T6')
+    # pprint(get_unique_filters())
+    pprint(get_waittime_for_filter('T6'))
 
     # pprint(status)

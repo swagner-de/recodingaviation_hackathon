@@ -1,4 +1,4 @@
-import eham_wait_time
+import ams_wait_time
 import requests
 import json
 import re
@@ -32,8 +32,8 @@ def get_pedestrian_time(routes):
         return route.get('attributes', {}).get('Total_PedestrianTime', None)
 
 def get_filters_on_route(directions):
-    filters_set = eham_wait_time.get_unique_filters()
-    filters = []
+    filters_set = ams_wait_time.get_unique_filters()
+    filters = set()
     for item in directions:
         events = item.get('events', [])
         for event in events:
@@ -44,7 +44,7 @@ def get_filters_on_route(directions):
                     try:
                         relevant = [k for k in filters_set if k in evt_string]
                         if relevant:
-                            filters.append(relevant[0])
+                            filters.add(relevant[0])
                     except AttributeError:
                         pass
     return filters if len(filters) != 0 else None
@@ -86,3 +86,4 @@ if __name__ == '__main__':
     from pprint import pprint
     r= get_directions_from_gates(arr_gate='D03', dep_gate='F04')
     pprint(r)
+    pprint(ams_wait_time.get_waittime_for_filters(r['filters_on_route']))
