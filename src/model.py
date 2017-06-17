@@ -32,6 +32,7 @@ class Leg(db.EmbeddedDocument):
     carrier = db.StringField(max_length=2)
     flight_no = db.StringField(max_length=4)
     departure_date = db.DateTimeField()
+    arrival_date = db.DateTimeField()
     delay = db.IntField()
     gate = db.StringField(max_length=20)
 
@@ -54,6 +55,7 @@ class Leg(db.EmbeddedDocument):
         try:
             estimated = dateutil.parser.parse(oper_info['estimatedInBlockTime'])
             scheduled = dateutil.parser.parse(oper_info['scheduledInBlockTime'])
+            self.arrival_date = scheduled
             self.delay = int((estimated - scheduled).total_seconds() / 60)
         except TypeError:
             self.delay = 0
@@ -61,7 +63,10 @@ class Leg(db.EmbeddedDocument):
             self.gate = oper_info['gate']['current']
         except KeyError:
             self.gate = None
-
+        try:
+            self.departure_date = dateutil.parser.parse(oper_info['scheduledOffBlockTime'])
+        except TypeError:
+            pass
 
 class Trip(db.Document):
     user = db.ReferenceField(User)
