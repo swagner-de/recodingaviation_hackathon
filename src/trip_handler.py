@@ -4,15 +4,19 @@ import model
 def get_current_legs(user):
     return user.get_current_legs()
 
-def get_connection(leg, legs_remaining):
+def get_connection(legs):
     earliest = None
     con = None
-    for r in legs_remaining:
-        if leg.arrival_airport == r.departure_airport:
-            if not earliest or earliest > r.departure_date:
-                con = r
-                earliest = r.departure_date
-    return {'inbound': leg, 'outbound': con} if con else None
+    for i in range(len(legs)):
+        leg = legs[i]
+        legs_remaining = legs[i+1:]
+        for r in legs_remaining:
+            if leg.arrival_airport == r.departure_airport:
+                if not earliest or earliest > r.departure_date:
+                    con = r
+                    earliest = r.departure_date
+            if con:
+                return {'inbound': leg, 'outbound': con}
 
 def get_flight_oper_info(connection):
     connection['inbound'].get_operational_info()
@@ -47,10 +51,7 @@ def calc_times(connection):
 
 def get_current_connect_info(user):
     current_legs = user.get_current_legs()
-    try:
-        connection = get_connection(current_legs[0], current_legs[1:])
-    except IndexError:
-        return None
+    connection = get_connection(current_legs)
     get_flight_oper_info(connection)
     get_transfer_info(connection)
     calc_times(connection)
