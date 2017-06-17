@@ -4,13 +4,13 @@ import os.path
 import pandas as pd
 import numpy as np
 import _pickle as pkl
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 
 class WaitimeEHAS:
     def __init__(self, file):
         self._file = file
         self._dict = None
-        self._pkl_file = "../../data/gulasch.pkl"
+        self._pkl_file = "../data/gulasch.pkl"
         if not os.path.isfile(self._pkl_file):
             df = self._load_data(self._file)
             self._dict = self._process_data(df)
@@ -28,22 +28,22 @@ class WaitimeEHAS:
         # Create Datetime from DAY and INTERVAL_15MIN
         df['DATE'] = pd.to_datetime(df['DAY'] + ' ' + df['INTERVAL'], format='%Y-%m-%d %H:%M')
         # Calculate People per Security Lane
-        df['PEOPLE_PER_LANE'] = df['TRANSFERFILTER'] / df['LANES_SECURITY']
+        df[0] = df['TRANSFERFILTER'] / df['LANES_SECURITY']
         # Sort by Date ascending
         df = df.sort_values('DATE')
 
         # Add the Values for +15, +30 and +45 minutes and replace NaN with 0
-        df['PEOPLE_PLUS_15'] = df.PEOPLE_PER_LANE.shift(-1)
-        df['PEOPLE_PLUS_30'] = df.PEOPLE_PER_LANE.shift(-2)
-        df['PEOPLE_PLUS_45'] = df.PEOPLE_PER_LANE.shift(-3)
+        df[15] = df[0].shift(-1)
+        df[30] = df[0].shift(-2)
+        df[45] = df[0].shift(-3)
         df.fillna(inplace=True, value=0)
 
     # Create Timestamp from DateTime
         df['TIMESTAMP'] = df.DATE.values.astype(np.int64) // 10 ** 9
 
-    # Select Useful Information from DataFrame
-        df_processed = df[['TIMESTAMP', 'PEOPLE_PER_LANE', 'PEOPLE_PLUS_15', 'PEOPLE_PLUS_30', 'PEOPLE_PLUS_45']]
+        df_processed = df[['TIMESTAMP', 0, 15, 30, 45]]
         df_processed.set_index('TIMESTAMP', inplace=True)
+    # Select Useful Information from DataFrame
 
         result = df_processed.T.to_dict()
         return result
@@ -76,11 +76,19 @@ class WaitimeEHAS:
         """ Loads the dictionary from file"""
         return pkl.load(open(pkl_file, "rb"))
 
+WAITEHAS  = WaitimeEHAS('../data/EF.csv')
+
+def get_best_timeslot(arrival_time, max_window):
+    ts = timestamp = (arrival_time - datetime(1970, 1, 1, tzinfo=timezone.utc)) / timedelta(seconds=1)
+
+    forecast =  WAITEHAS.get_predicted_waittime(ts)
+    for k, v in forecast.items():
+        best = None
+        if k <= max_window:
+            if not best or v < forecast[best]:
+                best = k
+    return best, 1-(forecast[best]/forecast[0])
+
 if __name__ == "__main__":
-    eh = "../../data/EF.csv"
-    gh = "../../data/GH.csv"
-    object = WaitimeEHAS(eh)
-#     eh_dict = process_data(load_data(eh))
-#     gh_dict = process_data(load_data(gh))
     from pprint import pprint
-    pprint(object.get_predicted_waittime("1497692825"))
+    pprint(get_best_timeslot("1497692825", 99))
