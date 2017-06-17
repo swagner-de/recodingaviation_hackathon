@@ -79,7 +79,7 @@ class WaitimeEHAS:
 WAITEHAS  = WaitimeEHAS('../data/EF.csv')
 
 def get_best_timeslot(arrival_time, max_window):
-    ts = timestamp = (arrival_time - datetime(1970, 1, 1, tzinfo=timezone.utc)) / timedelta(seconds=1)
+    ts = (arrival_time - datetime(1970, 1, 1, tzinfo=timezone.utc)) / timedelta(seconds=1)
 
     forecast =  WAITEHAS.get_predicted_waittime(ts)
     for k, v in forecast.items():
