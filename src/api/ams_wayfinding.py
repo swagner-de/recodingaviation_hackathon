@@ -33,7 +33,7 @@ def get_pedestrian_time(routes):
 
 def get_filters_on_route(directions):
     filters_set = ams_wait_time.get_unique_filters()
-    filters = set()
+    filters = []
     for item in directions:
         events = item.get('events', [])
         for event in events:
@@ -44,7 +44,7 @@ def get_filters_on_route(directions):
                     try:
                         relevant = [k for k in filters_set if k in evt_string]
                         if relevant:
-                            filters.add(relevant[0])
+                            filters.append(relevant[0])
                     except AttributeError:
                         pass
     return filters if len(filters) != 0 else None

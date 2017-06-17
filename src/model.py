@@ -32,6 +32,8 @@ class Leg(db.EmbeddedDocument):
     carrier = db.StringField(max_length=2)
     flight_no = db.StringField(max_length=4)
     departure_date = db.DateTimeField()
+    delay = db.IntField()
+    gate = db.StringField(max_length=20)
 
     @staticmethod
     def get_current_legs(user):
@@ -45,9 +47,20 @@ class Leg(db.EmbeddedDocument):
                     res.append(l)
         return sorted(res, key=lambda x: x.departure_date, reverse=False)
 
-    def get_delay(self):
+    def get_operational_info(self):
         from api import ams_oper_flight_status
-        return ams_oper_flight_status.get_oper_flight_status(self.carrier+self.flight_no)
+        import dateutil
+        oper_info = ams_oper_flight_status.get_oper_flight_status(self.carrier+self.flight_no)
+        try:
+            estimated = dateutil.parser.parse(oper_info['estimatedInBlockTime'])
+            scheduled = dateutil.parser.parse(oper_info['scheduledInBlockTime'])
+            self.delay = int((estimated - scheduled).total_seconds() / 60)
+        except TypeError:
+            self.delay = 0
+        try:
+            self.gate = oper_info['gate']['current']
+        except KeyError:
+            self.gate = None
 
 
 class Trip(db.Document):
