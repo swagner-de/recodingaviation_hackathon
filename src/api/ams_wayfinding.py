@@ -4,7 +4,7 @@ import re
 
 def get_geometry(gate, departue=True):
     uri = 'http://etest2.esri.nl:8080/arcgis/rest/services/Schiphol/SWF_POI/MapServer/0/query?where=NAME=%27{gate}%27%20and%20SUBCATEGORY%20=%20%27{dep_arr}%20Gate%27&outFields=*&returnGeometry=true&outSR=4326&returnZ=true&f=json'
-    if not re.search('\\w\\d+', gate):
+    if not re.search('\\w\\d{2}', gate):
         raise ValueError('Not a valid gate: %s' % gate)
 
     dep_arr = 'Departing' if departue else 'Arriving'
@@ -46,7 +46,7 @@ def get_filters_on_route(directions):
                         )
                     except AttributeError:
                         pass
-    return filters
+    return filters if len(filters) != 0 else None
 
 def __get_directions_from_geo(geo_arr:str, geo_dep:str) -> dict:
     uri = 'http://etest2.esri.nl:8080/arcgis/rest/services/Schiphol/SWF_NETWORK/NAServer/Route/solve?stops=' \
@@ -55,11 +55,12 @@ def __get_directions_from_geo(geo_arr:str, geo_dep:str) -> dict:
     resp = requests.get(
         uri % (geo_arr, geo_dep)
     )
+    print(uri % (geo_arr, geo_dep))
     resp_bdy = json.loads(resp.text)
     resp = None
 
-    routes = resp_bdy.get('routes', {}).get('features')
-    directions = resp_bdy.get('directions', [{}])[0].get('features')
+    routes = resp_bdy.get('routes', {}).get('features', [])
+    directions = resp_bdy.get('directions', [{}])[0].get('features', [])
     resp_bdy = None
 
 
@@ -81,5 +82,5 @@ def get_directions_from_gates(arr_gate:str, dep_gate:str) -> dict:
 
 if __name__ == '__main__':
     from pprint import pprint
-    r= get_directions_from_gates(arr_gate='E17', dep_gate='B32')
+    r= get_directions_from_gates(arr_gate='D03', dep_gate='F04')
     pprint(r)
