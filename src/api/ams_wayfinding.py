@@ -1,3 +1,4 @@
+import eham_wait_time
 import requests
 import json
 import re
@@ -31,7 +32,7 @@ def get_pedestrian_time(routes):
         return route.get('attributes', {}).get('Total_PedestrianTime', None)
 
 def get_filters_on_route(directions):
-    filter_re = re.compile('[A-Z]+\\d+')
+    filters_set = eham_wait_time.get_unique_filters()
     filters = []
     for item in directions:
         events = item.get('events', [])
@@ -41,9 +42,9 @@ def get_filters_on_route(directions):
                 evt_string = string_.get('string', None)
                 if evt_string:
                     try:
-                        filters.append(
-                            filter_re.search(evt_string).group(0)
-                        )
+                        relevant = [k for k in filters_set if k in evt_string]
+                        if relevant:
+                            filters.append(relevant[0])
                     except AttributeError:
                         pass
     return filters if len(filters) != 0 else None
@@ -77,6 +78,7 @@ def get_directions_from_gates(arr_gate:str, dep_gate:str) -> dict:
     geo_arr = str(arrival_g).replace('{','').replace('}', '')
     geo_dep = str(departure_g).replace('{','').replace('}', '')
     resp = __get_directions_from_geo(geo_arr, geo_dep)
+
     return resp
 
 
