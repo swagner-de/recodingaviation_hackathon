@@ -56,7 +56,7 @@ def calculate_closest(x, y, z):
         elif 'toilet' in o.get('subcategory').lower() and klo_flag == False:
             klo_flag = True
         result[euclidean_distance(x, geo['x'], y, geo['y'])] = o
-    return {k: result[k] for k in sorted(result, reverse=True)[:10]}
+    return [result[k] for k in sorted(result, reverse=True)[:10]]
 
 init()
 
