@@ -50,7 +50,8 @@ class Leg(db.EmbeddedDocument):
                     res.append(l)
         return sorted(res, key=lambda x: x.departure_date, reverse=False)
 
-    def get_operational_info(self):
+
+    def _get_oper_info_ams(self):
         from api import ams_oper_flight_status
         import dateutil
         oper_info = ams_oper_flight_status.get_oper_flight_status(self.carrier+self.flight_no)
@@ -74,6 +75,33 @@ class Leg(db.EmbeddedDocument):
             self.departure_date = dateutil.parser.parse(oper_info['scheduledOffBlockTime'])
         except TypeError:
             pass
+
+    def _get_oper_info_cph(self):
+        from api.cph_oper_flight_status import get_oper_flight_status
+        oper_info = get_oper_flight_status(self.carrier+self.flight_no)
+        estimated_ = oper_info.get('estimated', None)
+        scheduled_ = oper_info.get('scheduled', None)
+        try:
+            scheduled = datetime.fromtimestamp(int(scheduled_))
+            estimated = datetime.fromtimestamp(int(estimated_))
+            self.delay = int((estimated - scheduled).total_seconds() / 60)
+            if self.departure_airport == 'CPH':
+                # inbound
+                self.departure_date = scheduled
+            self.arrival_date = scheduled
+        except TypeError:
+            self.delay = 0
+        self.gate = oper_info.get('gate_number', None)
+
+
+
+    def get_operational_info(self):
+        if self.departure_airport == 'AMS' \
+            or self.arrival_airport == 'AMS':
+            self._get_oper_info_ams()
+        if self.departure_airport == 'CPH' \
+            or self.arrival_airport == 'CPH':
+            self._get_oper_info_cph()
 
 class Trip(db.Document):
     user = db.ReferenceField(User)

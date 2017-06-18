@@ -16,10 +16,10 @@ leg_5 = Leg(departure_airport='YYZ', arrival_airport='AMS',
 leg_6 = Leg(departure_airport='AMS', arrival_airport='CPH',
                 carrier='KL', flight_no='1125', departure_date=datetime.strptime('2017-06-28', '%Y-%m-%d'))
 
-leg_7 = Leg(departure_airport='SIN', arrival_airport='AMS',
-                carrier='KL', flight_no='0836', departure_date=datetime.strptime('2017-06-21', '%Y-%m-%d'))
-leg_8 = Leg(departure_airport='AMS', arrival_airport='MAD',
-                carrier='KL', flight_no='1701', departure_date=datetime.strptime('2017-06-16', '%Y-%m-%d'))
+leg_7 = Leg(departure_airport='MXP', arrival_airport='CPH',
+                carrier='SK', flight_no='1686', departure_date=datetime.strptime('2017-06-18', '%Y-%m-%d'))
+leg_8 = Leg(departure_airport='CPH', arrival_airport='NRT',
+                carrier='SK', flight_no='983', departure_date=datetime.strptime('2017-06-18', '%Y-%m-%d'))
 
 leg_9 = Leg(departure_airport='SVO', arrival_airport='AMS',
                 carrier='KL', flight_no='0904', departure_date=datetime.strptime('2017-06-17', '%Y-%m-%d'))
