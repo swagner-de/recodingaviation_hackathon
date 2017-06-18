@@ -49,6 +49,21 @@ def get_bag_journey():
     from trip_handler import get_bags_info
     return jsonify(get_bags_info(user=u))
 
+@app.route('/sorrounding', methods=['GET'])
+def get_sorrounding_pois():
+    gate = request.args.get('gate')
+    departure = request.args.get('departure') == 'true'
+    from api.ams_wayfinding import get_geometry
+    geo = get_geometry(gate, departure)
+    if not geo:
+        return 'Gate not found', 400
+    from analysis.ams_pois import calculate_closest
+    return jsonify(calculate_closest(
+        geo['x'],
+        geo['y'],
+        geo['z']
+    ))
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=4000)

@@ -4,3 +4,4 @@ datetime
 flask-mongoengine
 flask-httpauth
 python-dateutil
+pandas
