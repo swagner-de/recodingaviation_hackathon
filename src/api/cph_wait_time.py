@@ -21,7 +21,7 @@ def get_waittime_for_filters(to_pass):
 
 
 def get_filters(origin, destination):
-    from airports import eu_airports, us_airports
+    from api.airports import eu_airports, us_airports
     if origin in eu_airports and destination in eu_airports:
         return []
     if origin in eu_airports and destination in us_airports:
